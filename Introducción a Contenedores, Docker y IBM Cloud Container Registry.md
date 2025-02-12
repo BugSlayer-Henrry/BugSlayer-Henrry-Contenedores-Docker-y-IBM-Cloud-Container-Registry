@@ -2,7 +2,6 @@
 
 ## Introducción a Contenedores, Docker y IBM Cloud Container Registry
 
-![cognitiveclass.ai logo](https://github.com/user-attachments/assets/6ebbf608-07b8-470e-94cf-89fbeb2a39b5)
 
 ### Objetivos
 
