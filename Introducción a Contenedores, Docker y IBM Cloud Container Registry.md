@@ -1,4 +1,4 @@
-# BugSlayer-Henrry-Introducci-n-a-Contenedores-Docker-y-IBM-Cloud-Container-Registry
+# BugSlayer-Henrry-Introducción-a-Contenedores-Docker-y-IBM-Cloud-Container-Registry
 
 ## Introducción a Contenedores, Docker y IBM Cloud Container Registry
 
