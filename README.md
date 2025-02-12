@@ -1,153 +1,185 @@
-# BugSlayer-Henrry-Introducci-n-a-Contenedores-Docker-y-IBM-Cloud-Container-Registry
+# BugSlayer-Henrry-Introduccion-a-Contenedores-Docker-y-IBM-Cloud-Container-Registry
 
-Introducción a Contenedores, Docker y IBM Cloud Container Registry
-cognitiveclass.ai logo
-Objetivos
+## Introducción a Contenedores, Docker y IBM Cloud Container Registry
+
+![cognitiveclass.ai logo](https://github.com/user-attachments/assets/6ebbf608-07b8-470e-94cf-89fbeb2a39b5)
+
+### Objetivos
+
 En este laboratorio, usted:
 
-Extraerá una imagen de Docker Hub
-Ejecutará una imagen como un contenedor usando docker
-Construirá una imagen usando un Dockerfile
-Subirá una imagen al IBM Cloud Container Registry
-Nota: Por favor, complete el laboratorio en una sola sesión sin interrupciones, ya que el laboratorio puede entrar en modo offline y causar errores. Si enfrenta algún problema/error durante el proceso del laboratorio, por favor cierre sesión en el entorno del laboratorio. Luego limpie la caché y las cookies de su sistema e intente completar el laboratorio.![image](https://github.com/user-attachments/assets/dc2287c7-bcf8-4c0b-9eb7-14d44f00ff8b)
+- Extraerá una imagen de Docker Hub
+- Ejecutará una imagen como un contenedor usando Docker
+- Construirá una imagen usando un Dockerfile
+- Subirá una imagen al IBM Cloud Container Registry
 
+---
 
-Importante:
-Es posible que ya tenga una cuenta de IBM Cloud y que incluso tenga un espacio de nombres en el IBM Container Registry (ICR). Sin embargo, en este laboratorio no estará utilizando su propia cuenta de IBM Cloud ni su propio espacio de nombres de ICR. Estará utilizando una cuenta de IBM Cloud que ha sido generada automáticamente para usted para este ejercicio. El entorno del laboratorio no tendrá acceso a ningún recurso dentro de su cuenta personal de IBM Cloud, incluidos los espacios de nombres y las imágenes de ICR.
+### Verificar el entorno y las herramientas de línea de comandos
 
-Verificar el entorno y las herramientas de línea de comandos
-Abre una ventana de terminal utilizando el menú en el editor: Terminal > New Terminal.
-Nota: Si la terminal ya está abierta, por favor omite este paso.
+1. Abre una ventana de terminal utilizando el menú en el editor: `Terminal > New Terminal`.
+   - **Nota:** Si la terminal ya está abierta, omite este paso.
+   
+   ![image](https://github.com/user-attachments/assets/6ebbf608-07b8-470e-94cf-89fbeb2a39b5)
 
+2. Verifica que `docker` CLI esté instalado.
+   ```sh
+   docker --version
+   ```
+   Deberías ver la siguiente salida (la versión puede variar):
+   
+   ![image](https://github.com/user-attachments/assets/218d2781-90d7-4683-80ee-f8104b489c02)
 
+3. Verifica que `ibmcloud` CLI esté instalado.
+   ```sh
+   ibmcloud version
+   ```
+   Deberías ver la siguiente salida (la versión puede variar):
+   
+   ![image](https://github.com/user-attachments/assets/419e5a85-b444-41e2-86bc-196f907090b8)
 
-Verifica que docker CLI esté instalado.
-docker --version
-Deberías ver la siguiente salida, aunque la versión puede ser diferente:
+4. Cambia a la carpeta de tu proyecto.
+   - **Nota:** Si ya estás en la carpeta `/home/project`, omite este paso.
+   
+   ```sh
+   cd /home/project
+   ```
 
+5. Clona el repositorio de git que contiene los artefactos necesarios para este laboratorio.
+   ```sh
+   [ ! -d 'CC201' ] && git clone https://github.com/ibm-developer-skills-network/CC201.git
+   ```
+   
+   ![image](https://github.com/user-attachments/assets/28eaff62-3c1f-49b8-8283-689a603d63f4)
 
+6. Cambia al directorio del laboratorio y lista su contenido.
+   ```sh
+   cd CC201/labs/1_ContainersAndDocker/
+   ls
+   ```
+   
+   ![image](https://github.com/user-attachments/assets/0e53ad28-cc0b-4685-b22f-e37bd5abef83)
 
-Verifica que ibmcloud CLI esté instalado.
-ibmcloud version
-Deberías ver la siguiente salida, aunque la versión puede ser diferente:
+---
 
+### Extraer una imagen de Docker Hub y ejecutarla como un contenedor
 
+1. Lista tus imágenes de Docker.
+   ```sh
+   docker images
+   ```
+   - Deberías ver una tabla vacía (con solo encabezados) si aún no tienes ninguna imagen.
+   
+   ![image](https://github.com/user-attachments/assets/e7d004a5-f666-41b9-95da-138f979b2f14)
 
-Cambia a la carpeta de tu proyecto.
-Nota: Si ya estás en la carpeta ‘/home/project’, por favor omite este paso.
+2. Descarga tu primera imagen de Docker Hub.
+   ```sh
+   docker pull hello-world
+   ```
+   
+   ![image](https://github.com/user-attachments/assets/19bbdede-f8b6-4156-a042-943d4d739d59)
 
-cd /home/project
-Clona el repositorio de git que contiene los artefactos necesarios para este laboratorio, si no existe ya.
-[ ! -d 'CC201' ] && git clone https://github.com/ibm-developer-skills-network/CC201.git
+3. Lista las imágenes nuevamente para verificar la descarga.
+   ```sh
+   docker images
+   ```
+   
+   ![image](https://github.com/user-attachments/assets/1714a526-2539-4a89-9a15-e380a5538f87)
 
+4. Ejecuta la imagen `hello-world` como un contenedor.
+   ```sh
+   docker run hello-world
+   ```
+   
+   ![image](https://github.com/user-attachments/assets/d900745f-09a7-4853-b4ef-7319b426da0a)
 
-Cambia al directorio de este laboratorio ejecutando el siguiente comando. cd cambiará el directorio de trabajo/actual al directorio con el nombre especificado, en este caso CC201/labs/1_ContainersAndDcoker.
-cd CC201/labs/1_ContainersAndDocker/
-Enumera el contenido de este directorio para ver los artefactos de este laboratorio.
-ls
+5. Lista los contenedores para ver su estado.
+   ```sh
+   docker ps -a
+   ```
+   
+   ![image](https://github.com/user-attachments/assets/5302aea5-34ad-4612-87b3-285d526d970d)
 
+6. Elimina el contenedor.
+   ```sh
+   docker container rm <container_id>
+   ```
+   
+   ![image](https://github.com/user-attachments/assets/6375746d-a3f2-4f62-8f4d-c19317366697)
 
-Extraer una imagen de Docker Hub y ejecutarla como un contenedor
-Usa la docker CLI para listar tus imágenes.
-docker images
-Deberías ver una tabla vacía (con solo encabezados) ya que aún no tienes ninguna imagen.
+7. Verifica que el contenedor haya sido eliminado.
+   ```sh
+   docker ps -a
+   ```
+   
+   ![image](https://github.com/user-attachments/assets/73b31f81-cf79-4658-b1d2-c202fe22f1d1)
 
+---
 
+### Construir una imagen usando un Dockerfile
 
-Descarga tu primera imagen de Docker Hub.
-docker pull hello-world
+1. Construye la imagen con el siguiente comando:
+   ```sh
+   docker build . -t myimage:v1
+   ```
+   
+   ![image](https://github.com/user-attachments/assets/8ed4ec79-c094-4655-982b-e9b957618f9e)
 
+2. Lista las imágenes para ver la nueva imagen etiquetada como `myimage:v1`.
+   ```sh
+   docker images
+   ```
+   
+   ![image](https://github.com/user-attachments/assets/40e23363-54bc-474c-bb32-b4d8d8709948)
 
-Lista las imágenes nuevamente.
-docker images
-Ahora deberías ver la imagen hello-world presente en la tabla.
+3. Ejecuta la imagen como un contenedor.
+   ```sh
+   docker run -dp 8080:8080 myimage:v1
+   ```
+   
+   ![image](https://github.com/user-attachments/assets/5e1cfd7e-9ebe-48c8-a1b6-96696ee71dbf)
 
+4. Verifica que la aplicación está en funcionamiento.
+   ```sh
+   curl localhost:8080
+   ```
+   
+   ![image](https://github.com/user-attachments/assets/0cc13f65-c839-47df-9253-14967d26281d)
 
+5. Detén el contenedor.
+   ```sh
+   docker stop $(docker ps -q)
+   ```
+   
+   ![image](https://github.com/user-attachments/assets/b58c49fb-dcb4-44dc-bf80-20fe48ba3cf0)
 
-Ejecuta la imagen hello-world como un contenedor.
-docker run hello-world
-Deberías ver un mensaje de ‘¡Hola desde Docker!’.
+6. Verifica que el contenedor se ha detenido.
+   ```sh
+   docker ps
+   ```
+   
+   ![image](https://github.com/user-attachments/assets/e5869996-2b68-4d03-a178-6160d370e2a6)
 
-También habrá una explicación de lo que Docker hizo para generar este mensaje.
+---
 
+## Subir la imagen al IBM Cloud Container Registry
 
-
-Lista los contenedores para ver que tu contenedor se ejecutó y salió con éxito.
-docker ps -a
-Entre otras cosas, para este contenedor deberías ver un ID de contenedor, el nombre de la imagen (hello-world), y un estado que indica que el contenedor salió exitosamente.
-
-
-
-Toma nota del ID DE CONTENEDOR de la salida anterior y reemplaza la etiqueta <container_id> en el comando a continuación con este valor. Este comando elimina tu contenedor.
-docker container rm <container_id>
-
-
-Verifica que el contenedor haya sido eliminado. Ejecuta el siguiente comando.
-docker ps -a
-
-
-¡Felicidades por haber descargado una imagen de Docker Hub y por ejecutar tu primer contenedor! Ahora intentemos construir nuestra propia imagen.
-
-Construir una imagen usando un Dockerfile
-El directorio de trabajo actual contiene una aplicación simple de Node.js que ejecutaremos en un contenedor. La aplicación imprimirá un mensaje de saludo junto con el nombre del host. Los siguientes archivos son necesarios para ejecutar la aplicación en un contenedor:
-app.js es la aplicación principal, que simplemente responde con un mensaje de hola mundo.
-package.json define las dependencias de la aplicación.
-Dockerfile define las instrucciones que Docker utiliza para construir la imagen.
-Usa el Explorador para ver los archivos necesarios para esta aplicación. Haz clic en el ícono del Explorador (parece una hoja de papel) en el lado izquierdo de la ventana, y luego navega hasta el directorio de este laboratorio: CC201 > labs > 1_ContainersAndDocker. Haz clic en Dockerfile para ver los comandos requeridos para construir una imagen.
-Dockerfile en el Explorador
-
-Puedes refrescar tu comprensión de los comandos mencionados en el Dockerfile a continuación:
-
-La instrucción FROM inicializa una nueva etapa de construcción y especifica la imagen base sobre la que se construirán las instrucciones posteriores.
-
-El comando COPY nos permite copiar archivos a nuestra imagen.
-
-La instrucción RUN ejecuta comandos.
-
-La instrucción EXPOSE expone un puerto particular con un protocolo especificado dentro de un contenedor Docker.
-
-La instrucción CMD proporciona un valor predeterminado para ejecutar un contenedor, o en otras palabras, un ejecutable que debería ejecutarse en tu contenedor.
-
-Ejecuta el siguiente comando para construir la imagen:
-docker build . -t myimage:v1
-Como se vio en los videos del módulo, la salida crea una nueva capa para cada instrucción en el Dockerfile.
-
-
-
-Lista las imágenes para ver tu imagen etiquetada como myimage:v1 en la tabla.
-docker images
-
-
-Ten en cuenta que, en comparación con la imagen hello-world, esta imagen tiene un ID de imagen diferente. Esto significa que las dos imágenes constan de diferentes capas; en otras palabras, no son la misma imagen.
-
-Ejecutar la imagen como un contenedor
-Ahora que tu imagen está construida, ejecútala como un contenedor con el siguiente comando:
-docker run -dp 8080:8080 myimage:v1
-
-
-La salida es un código único asignado por docker para la aplicación que estás ejecutando.
-
-Ejecuta el comando curl para hacer ping a la aplicación como se indica a continuación.
-curl localhost:8080
-
-
-Si ves la salida como la anterior, indica que ‘¡Tu aplicación está en funcionamiento!’.
-
-Ahora, para detener el contenedor, usamos docker stop seguido del id del contenedor. El siguiente comando utiliza docker ps -q para pasar la lista de todos los contenedores en ejecución:
-docker stop $(docker ps -q)
-
-
-Verifica si el contenedor se ha detenido ejecutando el siguiente comando.
-docker ps
-
-
-Sube la imagen al IBM Cloud Container Registry
-El entorno ya debería haberte iniciado sesión en la cuenta de IBM Cloud que ha sido generada automáticamente para ti por el entorno de Skills Network Labs. El siguiente comando te dará información sobre la cuenta que estás utilizando:
+```sh
 ibmcloud target
+```
+
+![image](https://github.com/user-attachments/assets/347ce4e9-45fe-4a17-a08d-b8e58d40c0c5)
+
+```sh
+ibmcloud cr namespaces
+```
+
+![image](https://github.com/user-attachments/assets/43be6f5c-c5a8-4c5a-936b-363890246b48)
 
 
 El entorno también creó un espacio de nombres de IBM Cloud Container Registry (ICR) para ti. Dado que el Container Registry es multiusuario, se utilizan espacios de nombres para dividir el registro entre varios usuarios. Usa el siguiente comando para ver los espacios de nombres a los que tienes acceso:
 ibmcloud cr namespaces
+![image](https://github.com/user-attachments/assets/43be6f5c-c5a8-4c5a-936b-363890246b48)
 
 
 Deberías ver dos espacios de nombres listados que comienzan con sn-labs:
@@ -157,32 +189,39 @@ El segundo espacio de nombres, que es un espacio de nombres compartido, solo te 
 Asegúrate de que estás apuntando a la región adecuada para tu cuenta en la nube, por ejemplo, la región us-south donde residen estos espacios de nombres, como viste en la salida del comando ibmcloud target.
 ibmcloud cr region-set us-south
 
+![image](https://github.com/user-attachments/assets/8af333a4-ee03-4485-a9dc-d903a7acf614)
 
 Inicia sesión en el daemon de Docker local en IBM Cloud Container Registry para que puedas subir y bajar imágenes del registro.
 ibmcloud cr login
 
+![image](https://github.com/user-attachments/assets/56119ec0-d56d-43a3-b381-eab2d4c33e63)
 
 Exporta tu espacio de nombres como una variable de entorno para que pueda ser utilizada en comandos posteriores.
 export MY_NAMESPACE=sn-labs-$USERNAME
+![image](https://github.com/user-attachments/assets/4c87d656-b649-4a86-a2d3-0e2f870ba1d7)
 
 
 Etiqueta tu imagen para que pueda ser enviada al Registro de Contenedores de IBM Cloud.
 docker tag myimage:v1 us.icr.io/$MY_NAMESPACE/hello-world:1
+![image](https://github.com/user-attachments/assets/aa4eb896-8f02-4144-aa77-8342caab8ec0)
 
 
 Envía la imagen recién etiquetada al Registro de Contenedores de IBM Cloud.
 docker push us.icr.io/$MY_NAMESPACE/hello-world:1
+![image](https://github.com/user-attachments/assets/bde77cb3-1b03-4c10-aa71-9c95fb527712)
 
 
 Nota: Si has intentado este laboratorio anteriormente, es posible que la sesión anterior aún esté persistente. En tal caso, verás un mensaje de ‘La capa ya existe’ en lugar del mensaje de ‘Subido’ en la salida anterior. Te recomendamos que continúes con los siguientes pasos del laboratorio.
 
 Verifica que la imagen se haya subido correctamente listando las imágenes en el Registro de Contenedores.
 ibmcloud cr images
+![image](https://github.com/user-attachments/assets/dff0969e-4124-419d-a462-2604aff9dbea)
 
 
 Opcionalmente, para ver solo imágenes dentro de un espacio de nombres específico.
 
 ibmcloud cr images --restrict $MY_NAMESPACE
+![image](https://github.com/user-attachments/assets/5f98b46b-44e4-419e-aaf1-65d14b98d5ea)
 
 
 Deberías ver el nombre de tu imagen en la salida.
